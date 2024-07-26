@@ -294,10 +294,25 @@ class _SelectToState extends State<SelectTo> {
                           fontWeight: FontWeight.w700),
                     ),
                     onTap: () async {
-                      airportController.toAirportName = airport["airport"]!;
-                      airportController.toAirportCode = airport["code"]!;
-                      airportController.toCity = airport["city"]!;
-                      Get.offAll(() => Home(), transition: Transition.upToDown);
+                      if (airportController.fromAirportName ==
+                              airport["airport"]! &&
+                          airportController.fromAirportCode ==
+                              airport["code"]! &&
+                          airportController.fromCity == airport["city"]!) {
+                        Get.snackbar(
+                          'Error',
+                          'Please Select Different Source and Destination.',
+                          backgroundColor: Colors.redAccent,
+                          borderRadius: 10,
+                          colorText: Colors.white,
+                        );
+                      } else {
+                        airportController.toAirportName = airport["airport"]!;
+                        airportController.toAirportCode = airport["code"]!;
+                        airportController.toCity = airport["city"]!;
+                        Get.offAll(() => Home(),
+                            transition: Transition.upToDown);
+                      }
                     },
                   ),
                 );
@@ -338,6 +353,7 @@ class _SelectToState extends State<SelectTo> {
 
   AppBar SelectFromAppbar() {
     return AppBar(
+      toolbarHeight: 100,
       backgroundColor: Color.fromARGB(255, 255, 214, 0),
       // centerTitle: true,
       leading: IconButton(
