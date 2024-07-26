@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripster_draft2/bookingScreens/fromScreen.dart';
+import 'package:tripster_draft2/bookingScreens/toScreen.dart';
+import 'package:tripster_draft2/controllers/airportcontroller.dart';
 import 'package:tripster_draft2/controllers/radiocontroller.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final radioController = Get.put(RadioController());
+  final airportController = Get.put(AirportController());
 
   @override
   void initState() {
@@ -46,7 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Column(
                           children: [
                             radioSection(), //One Way , Round Trip Selector
-                            fromToSection(), //From to Selctor Container
+                            fromToSection(
+                                airportController), //From to Selctor Container
                             (radioController.selectedRadio == 1)
                                 ? onewayDateSection()
                                 : roundTripDateSection(), //Date Selector
@@ -200,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Container fromToSection() {
+  Container fromToSection(AirportController airportController) {
     return Container(
       height: 120,
       decoration: const BoxDecoration(
@@ -217,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         flex: 1,
                         child: GestureDetector(
                           onTap: () {
-                            Get.to(() => SelectFrom(),
+                            Get.to(() => const SelectFrom(),
                                 transition: Transition.downToUp);
                           },
                           child: Container(
@@ -235,13 +239,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                         border: BorderDirectional(
                                             bottom: BorderSide(
                                                 color: Colors.grey, width: 1))),
-                                    child: const Row(
+                                    child: Row(
                                       children: [
                                         Padding(
                                           padding: EdgeInsets.only(
                                               left: 10, right: 10),
                                           child: Text(
-                                            'PQN',
+                                            (airportController.fromArportCode ==
+                                                    '')
+                                                ? 'FROM'
+                                                : airportController
+                                                    .fromArportCode,
                                             style: TextStyle(
                                                 color: Color.fromARGB(
                                                     255, 53, 53, 53),
@@ -250,7 +258,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                         Text(
-                                          'Pune',
+                                          (airportController.fromCity == '')
+                                              ? 'From City'
+                                              : airportController.fromCity,
                                           style: TextStyle(
                                               color: Color.fromARGB(
                                                   255, 53, 53, 53),
@@ -268,7 +278,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                         flex: 1,
                         child: GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Get.to(() => SelectTo(),
+                                transition: Transition.upToDown);
+                          },
                           child: Container(
                             decoration: const BoxDecoration(),
                             child: Row(
@@ -281,13 +294,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Container(
                                     height: 60,
                                     decoration: const BoxDecoration(),
-                                    child: const Row(
+                                    child: Row(
                                       children: [
                                         Padding(
                                           padding: EdgeInsets.only(
                                               left: 10, right: 10),
                                           child: Text(
-                                            'BOM',
+                                            (airportController.toAirportCode ==
+                                                    '')
+                                                ? 'TO'
+                                                : airportController
+                                                    .toAirportCode,
                                             style: TextStyle(
                                                 color: Color.fromARGB(
                                                     255, 53, 53, 53),
@@ -296,7 +313,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                         Text(
-                                          'Mumbai',
+                                          (airportController.toCity == '')
+                                              ? 'City'
+                                              : airportController.toCity,
                                           style: TextStyle(
                                               color: Color.fromARGB(
                                                   255, 53, 53, 53),

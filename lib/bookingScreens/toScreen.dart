@@ -5,14 +5,14 @@ import 'package:tripster_draft2/controllers/airportcontroller.dart';
 import 'package:tripster_draft2/home.dart';
 import 'package:tripster_draft2/screens/HomeScreen.dart';
 
-class SelectFrom extends StatefulWidget {
-  const SelectFrom({super.key});
+class SelectTo extends StatefulWidget {
+  const SelectTo({super.key});
 
   @override
-  _SelectFromState createState() => _SelectFromState();
+  _SelectToState createState() => _SelectToState();
 }
 
-class _SelectFromState extends State<SelectFrom> {
+class _SelectToState extends State<SelectTo> {
   final TextEditingController _searchController = TextEditingController();
   AirportController airportController = Get.find();
   final List<Map<String, String>> airports = [
@@ -294,9 +294,9 @@ class _SelectFromState extends State<SelectFrom> {
                           fontWeight: FontWeight.w700),
                     ),
                     onTap: () async {
-                      airportController.fromAirportName = airport["airport"]!;
-                      airportController.fromArportCode = airport["code"]!;
-                      airportController.fromCity = airport["city"]!;
+                      airportController.toAirportName = airport["airport"]!;
+                      airportController.toAirportCode = airport["code"]!;
+                      airportController.toCity = airport["city"]!;
                       Get.offAll(() => Home(), transition: Transition.upToDown);
                     },
                   ),
@@ -346,7 +346,7 @@ class _SelectFromState extends State<SelectFrom> {
           },
           icon: Icon(CupertinoIcons.back)),
       title: Text(
-        'Where From?',
+        'Where To?',
         style: TextStyle(
             color: Colors.black, fontSize: 22, fontWeight: FontWeight.w600),
       ),
