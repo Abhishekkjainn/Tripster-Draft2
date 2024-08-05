@@ -6,6 +6,8 @@ import 'package:tripster_draft2/bookingScreens/passengerAndClass.dart';
 import 'package:tripster_draft2/bookingScreens/toScreen.dart';
 import 'package:tripster_draft2/controllers/airportcontroller.dart';
 import 'package:tripster_draft2/controllers/radiocontroller.dart';
+import 'package:tripster_draft2/controllers/searchcontroller.dart';
+import 'package:tripster_draft2/resultsPages/SearchResult.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final radioController = Get.put(RadioController());
   final airportController = Get.put(AirportController());
+  final onewayController = Get.put(OnewayController());
 
   @override
   void initState() {
@@ -46,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (weekday == 8) {
       return 'Sun';
     } else {
-      return 'Null';
+      return 'Day';
     }
   }
 
@@ -87,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (Monthint == 12) {
       return 'Dec';
     } else {
-      return 'Null';
+      return 'Month';
     }
   }
 
@@ -95,76 +98,105 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: double.maxFinite,
-              height: 430,
-              decoration:
-                  const BoxDecoration(color: Color.fromARGB(255, 255, 214, 0)),
-              child: Padding(
-                padding: const EdgeInsets.all(15),
-                child: GetBuilder<RadioController>(
-                  builder: (controller) {
-                    return Container(
+        child: GetBuilder<OnewayController>(
+          builder: (controller) {
+            return (onewayController.isLoading)
+                ? Center(
+                    child: Container(
+                      height: 150,
+                      width: 150,
                       decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(22)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: Column(
-                          children: [
-                            radioSection(), //One Way , Round Trip Selector
-                            GetBuilder<AirportController>(
-                              builder: (controller) {
-                                return fromToSection(airportController);
-                              },
-                            ),
-                            //From to Selctor Container
-                            (radioController.selectedRadio == 1)
-                                ? onewayDateSection(airportController)
-                                : roundTripDateSection(
-                                    airportController), //Date Selector
-                            passengerSelectionSection(), //Passenger and Cabin class Selection
-                            searchButtonSection() //Search Button
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ), //Container for the Body of the Booking Form
-            signinBanner(),
-            travelblogsheading(),
-            travelblogssubheading(),
-          ],
+                          borderRadius: BorderRadius.circular(20)),
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : CompleteHome();
+          },
         ),
       ),
     );
   }
 
-  Container searchButtonSection() {
-    return Container(
-      width: double.maxFinite,
-      alignment: Alignment.center,
-      height: 60,
-      decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 255, 214, 0),
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(18),
-              bottomRight: Radius.circular(18))),
-      child: const Text(
-        'Search',
-        style: TextStyle(
-            color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600),
+  Column CompleteHome() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: double.maxFinite,
+          height: 430,
+          decoration:
+              const BoxDecoration(color: Color.fromARGB(255, 255, 214, 0)),
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: GetBuilder<RadioController>(
+              builder: (controller) {
+                return Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(22)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Column(
+                      children: [
+                        radioSection(), //One Way , Round Trip Selector
+                        GetBuilder<AirportController>(
+                          builder: (controller) {
+                            return fromToSection(airportController);
+                          },
+                        ),
+                        //From to Selctor Container
+                        (radioController.selectedRadio == 1)
+                            ? onewayDateSection(airportController)
+                            : roundTripDateSection(airportController),
+                        GetBuilder<AirportController>(
+                          builder: (controller) {
+                            return passengerSelectionSection(
+                                airportController); //Passenger and Cabin class Selection;
+                          },
+                        ), //Date Selector
+
+                        searchButtonSection() //Search Button
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ), //Container for the Body of the Booking Form
+        signinBanner(),
+        travelblogsheading(),
+        travelblogssubheading(),
+      ],
+    );
+  }
+
+  GestureDetector searchButtonSection() {
+    return GestureDetector(
+      onTap: () async {
+        await airportController.callSearch();
+      },
+      child: Container(
+        width: double.maxFinite,
+        alignment: Alignment.center,
+        height: 60,
+        decoration: const BoxDecoration(
+            color: Color.fromARGB(255, 255, 214, 0),
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(18),
+                bottomRight: Radius.circular(18))),
+        child: const Text(
+          'Search',
+          style: TextStyle(
+              color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600),
+        ),
       ),
     );
   }
 
-  Padding passengerSelectionSection() {
+  Padding passengerSelectionSection(AirportController airportController) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: GestureDetector(
@@ -174,33 +206,27 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           height: 70,
           decoration: const BoxDecoration(),
-          child: const Row(
+          child: Row(
             children: [
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 20),
                 child: Icon(CupertinoIcons.person),
               ),
               Text(
-                'Adult 1, ',
+                'Adult: ${airportController.Adults}, ' +
+                    '${(airportController.Child == 0) ? '' : 'Child: ${airportController.Child}, '}',
                 style: TextStyle(
                     color: Color.fromARGB(255, 53, 53, 53),
                     fontWeight: FontWeight.w900,
                     fontSize: 18),
               ),
               Text(
-                'Economy,',
+                airportController.SelectedCabin,
                 style: TextStyle(
                     color: Color.fromARGB(255, 53, 53, 53),
                     fontWeight: FontWeight.w600,
                     fontSize: 14),
               ),
-              Text(
-                ' Student',
-                style: TextStyle(
-                    color: Color.fromARGB(255, 53, 53, 53),
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14),
-              )
             ],
           ),
         ),

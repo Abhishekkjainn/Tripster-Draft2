@@ -310,8 +310,7 @@ class _SelectToState extends State<SelectTo> {
                         airportController.toAirportName = airport["airport"]!;
                         airportController.toAirportCode = airport["code"]!;
                         airportController.toCity = airport["city"]!;
-                        Get.offAll(() => Home(),
-                            transition: Transition.upToDown);
+                        Get.off(() => Home(), transition: Transition.upToDown);
                       }
                     },
                   ),

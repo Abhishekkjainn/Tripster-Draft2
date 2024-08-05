@@ -224,6 +224,7 @@ class _SelectFromState extends State<SelectFrom> {
 
     // Add all other airport data here
   ];
+
   List<Map<String, String>> _filteredAirports = [];
 
   @override
@@ -309,8 +310,7 @@ class _SelectFromState extends State<SelectFrom> {
                         airportController.fromAirportName = airport["airport"]!;
                         airportController.fromAirportCode = airport["code"]!;
                         airportController.fromCity = airport["city"]!;
-                        Get.offAll(() => Home(),
-                            transition: Transition.upToDown);
+                        Get.off(() => Home(), transition: Transition.upToDown);
                       }
                     },
                   ),
