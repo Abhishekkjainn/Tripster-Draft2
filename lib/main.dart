@@ -34,7 +34,7 @@ class _SplashState extends State<Splash> {
     // super.initState();
     // Set a timer to navigate to the Home page after 3 seconds
     Timer(const Duration(seconds: 3), () {
-      Get.to(() => Home(), transition: Transition.downToUp);
+      Get.offAll(() => Home(), transition: Transition.downToUp);
     });
   }
 

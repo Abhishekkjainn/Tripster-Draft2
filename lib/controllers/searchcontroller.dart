@@ -8,8 +8,6 @@ class OnewayController extends GetxController {
   AirportController airportController = Get.find();
   late Map<String, dynamic> jsonData;
   late int length = 0;
-  late int tolength = 0;
-  late int fromlength = 0;
   List AirlineList = [];
   List AirlineCode = [];
   List AirlineLicensed = [];

@@ -6,8 +6,9 @@ import 'package:tripster_draft2/bookingScreens/passengerAndClass.dart';
 import 'package:tripster_draft2/bookingScreens/toScreen.dart';
 import 'package:tripster_draft2/controllers/airportcontroller.dart';
 import 'package:tripster_draft2/controllers/radiocontroller.dart';
+import 'package:tripster_draft2/controllers/returnSearch.dart';
 import 'package:tripster_draft2/controllers/searchcontroller.dart';
-import 'package:tripster_draft2/resultsPages/SearchResult.dart';
+// import 'package:tripster_draft2/resultsPages/SearchResult.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final radioController = Get.put(RadioController());
   final airportController = Get.put(AirportController());
   final onewayController = Get.put(OnewayController());
+  final returnController = Get.put(ReturnController());
 
   @override
   void initState() {
@@ -176,7 +178,9 @@ class _HomeScreenState extends State<HomeScreen> {
   GestureDetector searchButtonSection() {
     return GestureDetector(
       onTap: () async {
-        await airportController.callSearch();
+        (radioController.selectedRadio == 1)
+            ? await airportController.callSearch()
+            : await airportController.callSearchReturn();
       },
       child: Container(
         width: double.maxFinite,

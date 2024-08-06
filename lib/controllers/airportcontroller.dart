@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tripster_draft2/controllers/radiocontroller.dart';
+import 'package:tripster_draft2/controllers/returnSearch.dart';
 import 'package:tripster_draft2/controllers/searchcontroller.dart';
+import 'package:tripster_draft2/resultsPages/ReturnResult.dart';
 import 'package:tripster_draft2/resultsPages/SearchResult.dart';
 
 OnewayController onewayController = Get.find();
 RadioController radioController = Get.find();
 SearchController searchController = Get.find();
+ReturnController returnController = Get.find();
 
 class AirportController extends GetxController {
   String fromAirportCode = 'FROM';
@@ -96,5 +99,35 @@ class AirportController extends GetxController {
     };
 
     await onewayController.doSearch(searchRequest);
+  }
+
+  callSearchReturn() async {
+    final returnRequest = {
+      "searchQuery": {
+        "cabinClass": SelectedCabin.toString(),
+        "paxInfo": {
+          "ADULT": Adults.toString(),
+          "CHILD": Child.toString(),
+          "INFANT": "0",
+        },
+        "routeInfos": [
+          {
+            "fromCityOrAirport": {"code": fromAirportCode.toString()},
+            "toCityOrAirport": {"code": toAirportCode.toString()},
+            "travelDate": RoundTripStart.toString().substring(0, 10)
+          },
+          {
+            "fromCityOrAirport": {"code": toAirportCode.toString()},
+            "toCityOrAirport": {"code": fromAirportCode.toString()},
+            "travelDate": RoundTripEnds.toString().substring(0, 10)
+          }
+        ],
+        "preferredAirline": [],
+        "searchModifiers": {"isDirectFlight": false, "isConnectingFlight": true}
+      }
+    };
+    print("Return Request: $returnRequest");
+    Get.to(() => const ReturnResults(), transition: Transition.rightToLeft);
+    await returnController.doSearch(returnRequest);
   }
 }
