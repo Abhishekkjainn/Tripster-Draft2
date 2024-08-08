@@ -130,4 +130,11 @@ class AirportController extends GetxController {
     Get.to(() => const ReturnResults(), transition: Transition.rightToLeft);
     await returnController.doSearch(returnRequest);
   }
+
+  callonewayCancellation(String Id) async {
+    final cancellationRequest = {
+      "priceIds": [Id]
+    };
+    await onewayController.getCancellation(cancellationRequest);
+  }
 }

@@ -211,7 +211,6 @@ class _ReturnResultsState extends State<ReturnResults> {
                     // returnController.sortListsByDuration(0);
                     setState(() {});
                     Get.back();
-                    // returnController.cleanList();
                   },
                   icon: const Icon(CupertinoIcons.back)),
               // decoration: BoxDecoration(color: Colors.amber),
@@ -844,7 +843,10 @@ class _ReturnResultsState extends State<ReturnResults> {
       padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
       child: GestureDetector(
         onTap: () {
-          Get.to(() => SelectedFlight(index: index));
+          Get.to(() => SelectedFlight(
+                index: index,
+                whichlist: 1,
+              ));
         },
         child: Container(
           width: double.maxFinite,
@@ -1079,7 +1081,10 @@ class _ReturnResultsState extends State<ReturnResults> {
       padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
       child: GestureDetector(
         onTap: () {
-          Get.to(() => SelectedFlight(index: index));
+          Get.to(() => SelectedFlight(
+                index: index,
+                whichlist: 2,
+              ));
         },
         child: Container(
           width: double.maxFinite,

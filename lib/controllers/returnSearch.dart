@@ -324,6 +324,7 @@ class ReturnController extends GetxController {
   //     "searchModifiers": {"isDirectFlight": true, "isConnectingFlight": false}
   //   }
   // };
+
   var searchResults = {}.obs;
   String apikey = '7114311e6a5e4f-ae3b-4988-9291-c9d3bca23bca';
   String apiUrl = 'https://apitest.tripjack.com';

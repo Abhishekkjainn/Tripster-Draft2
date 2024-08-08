@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
@@ -7,7 +8,9 @@ import 'package:tripster_draft2/controllers/airportcontroller.dart';
 class OnewayController extends GetxController {
   AirportController airportController = Get.find();
   late Map<String, dynamic> jsonData;
+  late Map<String, dynamic> cancelData;
   late int length = 0;
+  late int foodlength = 0;
   List AirlineList = [];
   List AirlineCode = [];
   List AirlineLicensed = [];
@@ -32,14 +35,26 @@ class OnewayController extends GetxController {
   List isReturn = [];
   List isNextDay = [];
   List AdultPrices = [];
-  List ChildPrices = [];
-  List InfantPrices = [];
   List AdultBasePrices = [];
-  List ChildBasePrices = [];
   List InfantBasePrices = [];
   List AdultTaxPrices = [];
-  List ChildTaxPrices = [];
-  List InfantTaxPrices = [];
+  List SeatsRemaining = [];
+  List Baggage = [];
+  List Cabinbag = [];
+  List Id = [];
+  List FirstIdentifiername = [];
+  List FirstIdentifierAdultTotal = [];
+  List FirstIdentifierAdultTax = [];
+  List FirstIdentifierAdultBaggage = [];
+  List FirstIdentifierAdultCabinBaggage = [];
+  List FirstIdentifierAdultrefundable = [];
+  List SecondIdentifiername = [];
+  List SecondIdentifierAdultTotal = [];
+  List SecondIdentifierAdultTax = [];
+  List SecondIdentifierAdultBaggage = [];
+  List SecondIdentifierAdultCabinBaggage = [];
+  List SecondIdentifierAdultrefundable = [];
+  List MealIncluded = [];
 
   String FromCity = '';
   String FromCityCode = '';
@@ -71,14 +86,22 @@ class OnewayController extends GetxController {
     isReturn.clear();
     isNextDay.clear();
     AdultPrices.clear();
-    ChildPrices.clear();
-    InfantPrices.clear();
     AdultBasePrices.clear();
-    ChildBasePrices.clear();
-    InfantBasePrices.clear();
     AdultTaxPrices.clear();
-    ChildTaxPrices.clear();
-    InfantTaxPrices.clear();
+    SeatsRemaining.clear();
+    Baggage.clear();
+    Cabinbag.clear();
+    Id.clear();
+    FirstIdentifiername.clear();
+    FirstIdentifierAdultTotal.clear();
+    FirstIdentifierAdultTax.clear();
+    SecondIdentifiername.clear();
+    SecondIdentifierAdultTotal.clear();
+    SecondIdentifierAdultTax.clear();
+    SecondIdentifierAdultBaggage.clear();
+    SecondIdentifierAdultCabinBaggage.clear();
+    SecondIdentifierAdultrefundable.clear();
+    MealIncluded.clear();
   }
 
   PopulateLists() {
@@ -134,16 +157,55 @@ class OnewayController extends GetxController {
           ['totalPriceList'][0]['fd']['ADULT']['fC']['TF']);
       AdultTaxPrices.add(jsonData['searchResult']['tripInfos']['ONWARD'][i]
           ['totalPriceList'][0]['fd']['ADULT']['fC']['TAF']);
-      // InfantPrices.add(jsonData['searchResult']['tripInfos']['ONWARD'][i]
-      //     ['totalPriceList'][1]['fd']['INFANT']['fC']['TF']);
-      // ChildPrices.add(jsonData['searchResult']['tripInfos']['ONWARD'][i]
-      //     ['totalPriceList'][1]['fd']['CHILD']['fC']['TF']);
+      SeatsRemaining.add(jsonData['searchResult']['tripInfos']['ONWARD'][i]
+          ['totalPriceList'][0]['fd']['ADULT']['sR']);
+      Baggage.add(jsonData['searchResult']['tripInfos']['ONWARD'][i]
+          ['totalPriceList'][0]['fd']['ADULT']['bI']['iB']);
+      Cabinbag.add(jsonData['searchResult']['tripInfos']['ONWARD'][i]
+          ['totalPriceList'][0]['fd']['ADULT']['bI']['cB']);
+      Id.add(jsonData['searchResult']['tripInfos']['ONWARD'][i]
+          ['totalPriceList'][0]['id']);
+      FirstIdentifiername.add(jsonData['searchResult']['tripInfos']['ONWARD'][i]
+          ['totalPriceList'][0]['fareIdentifier']);
+      FirstIdentifierAdultTotal.add(jsonData['searchResult']['tripInfos']
+          ['ONWARD'][i]['totalPriceList'][0]['fd']['ADULT']['fC']['TF']);
+      FirstIdentifierAdultTax.add(jsonData['searchResult']['tripInfos']
+          ['ONWARD'][i]['totalPriceList'][0]['fd']['ADULT']['fC']['TAF']);
+      FirstIdentifierAdultrefundable.add(jsonData['searchResult']['tripInfos']
+          ['ONWARD'][i]['totalPriceList'][0]['fd']['ADULT']['rT']);
+      // FirstIdentifierAdultBaggage.add(jsonData[])
+      if (jsonData['searchResult']['tripInfos']['ONWARD'][i]['totalPriceList']
+              .length >
+          1) {
+        SecondIdentifiername.add(jsonData['searchResult']['tripInfos']['ONWARD']
+            [i]['totalPriceList'][1]['fareIdentifier']);
+        SecondIdentifierAdultTotal.add(jsonData['searchResult']['tripInfos']
+            ['ONWARD'][i]['totalPriceList'][1]['fd']['ADULT']['fC']['TF']);
+        SecondIdentifierAdultTax.add(jsonData['searchResult']['tripInfos']
+            ['ONWARD'][i]['totalPriceList'][1]['fd']['ADULT']['fC']['TAF']);
+        SecondIdentifierAdultrefundable.add(jsonData['searchResult']
+                ['tripInfos']['ONWARD'][i]['totalPriceList'][1]['fd']['ADULT']
+            ['rT']);
+        SecondIdentifierAdultBaggage.add(jsonData['searchResult']['tripInfos']
+            ['ONWARD'][i]['totalPriceList'][1]['fd']['ADULT']['bI']['iB']);
+        SecondIdentifierAdultCabinBaggage.add(jsonData['searchResult']
+                ['tripInfos']['ONWARD'][i]['totalPriceList'][1]['fd']['ADULT']
+            ['bI']['cB']);
+      } else {
+        SecondIdentifiername.add(" ");
+        SecondIdentifierAdultTotal.add(" ");
+        SecondIdentifierAdultTax.add(" ");
+        SecondIdentifierAdultrefundable.add(" ");
+        SecondIdentifierAdultBaggage.add(" ");
+        SecondIdentifierAdultCabinBaggage.add(" ");
+      }
+      MealIncluded.add(jsonData['searchResult']['tripInfos']['ONWARD'][i]
+          ['totalPriceList'][0]['fd']['ADULT']['mI']);
     }
-    AdultPrices =
-        AdultPrices.map((number) => number * airportController.Adults).toList();
-    AdultTaxPrices =
-        AdultTaxPrices.map((number) => number * airportController.Adults)
-            .toList();
+    AdultPrices = AdultPrices.map((number) =>
+        number * (airportController.Adults + airportController.Child)).toList();
+    AdultTaxPrices = AdultTaxPrices.map((number) =>
+        number * (airportController.Adults + airportController.Child)).toList();
   }
 
   bool nonstop = true;
@@ -401,7 +463,7 @@ class OnewayController extends GetxController {
         headers: headers,
         body: jsonEncode(searchRequest),
       );
-      print(response.body);
+      log(response.body);
 
       if (response.statusCode == 200) {
         searchResults.value = jsonDecode(response.body);
@@ -423,5 +485,90 @@ class OnewayController extends GetxController {
       isLoading = false;
     }
     update();
+  }
+
+  int whichFare = 0;
+  double selectedFare = 0;
+  handleFareChange(int value, fare) {
+    whichFare = value;
+    selectedFare = fare;
+    log(whichFare.toString());
+    update();
+  }
+
+  List Mealname = [];
+  List MealAmount = [];
+  List MealCode = [];
+  List FirstRule = [];
+  List FirstRuleDesc = [];
+  List FirstCancellationFees = [];
+  List SecondRule = [];
+  List SecondRuleDesc = [];
+  List SecondCancellationFees = [];
+  List ThirdRule = [];
+  List ThirdRuleDesc = [];
+  List ThirdCancellationFees = [];
+  List FourthRule = [];
+  List FourthRuleDesc = [];
+  List FourthCancellationFees = [];
+  List BookingId = [];
+
+  populateFarerules() {
+    foodlength = cancelData["tripInfos"][0]["sI"][0]["ssrInfo"]["MEAL"].length;
+    for (int i = 0; i < foodlength; i++) {
+      Mealname.add(
+          cancelData["tripInfos"][0]["sI"][0]["ssrInfo"]["MEAL"][i]["desc"]);
+      MealAmount.add(
+          cancelData["tripInfos"][0]["sI"][0]["ssrInfo"]["MEAL"][i]["amount"]);
+      MealCode.add(
+          cancelData["tripInfos"][0]["sI"][0]["ssrInfo"]["MEAL"][i]["code"]);
+      FirstRule.add(cancelData["tripInfos"][1]["totalPriceList"][0]
+          ["fareRuleInformation"]["tfr"]["NO_SHOW"][0]["policyInfo"]);
+      FirstRuleDesc.add(" ");
+      SecondRule.add(cancelData["tripInfos"][1]["totalPriceList"][0]
+          ["fareRuleInformation"]["tfr"]["DATECHANGE"][0]["policyInfo"]);
+      SecondCancellationFees.add(cancelData["tripInfos"][1]["totalPriceList"][0]
+          ["fareRuleInformation"]["tfr"]["DATECHAGE"][0]["amount"]);
+      ThirdRule.add(cancelData["tripInfos"][1]["totalPriceList"][0]
+          ["fareRuleInformation"]["tfr"]["CANCELLATION"][0]["policyInfo"]);
+      ThirdCancellationFees.add(cancelData["tripInfos"][1]["totalPriceList"][0]
+          ["fareRuleInformation"]["tfr"]["CANCELLATION"][0]["amount"]);
+      FourthRule.add(cancelData["tripInfos"][1]["totalPriceList"][0]
+          ["fareRuleInformation"]["tfr"]["SEAT_CHARGEABLE"][0]["policyInfo"]);
+      FourthCancellationFees.add(" ");
+      BookingId.add(cancelData["bookingId"]);
+    }
+  }
+
+  var searchResultscancellation = {}.obs;
+  Map<String, String> headers2 = {
+    'apikey': '6124573b4f6b20-4932-42e2-9d81-bd013141861a',
+    'Content-Type': 'application/json'
+  };
+
+  Future<void> getCancellation(Map<String, dynamic> cancellationRequest) async {
+    const String endpoint = '/fms/v1/review';
+    final String url = '$apiUrl$endpoint';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers2,
+        body: jsonEncode(cancellationRequest),
+      );
+      log(response.body);
+      if (response.statusCode == 200) {
+        searchResultscancellation.value = jsonDecode(response.body);
+        cancelData = jsonDecode(response.body);
+        populateFarerules();
+        update();
+      } else {
+        Get.snackbar('Error', 'Failed to fetch flight data',
+            backgroundColor: Colors.redAccent, isDismissible: true);
+        Get.back();
+      }
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }

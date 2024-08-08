@@ -573,7 +573,10 @@ class _SearchResultsState extends State<SearchResults> {
       padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
       child: GestureDetector(
         onTap: () {
-          Get.to(() => SelectedFlight(index: index));
+          Get.to(() => SelectedFlight(
+                index: index,
+                whichlist: 0,
+              ));
         },
         child: Container(
           width: double.maxFinite,
