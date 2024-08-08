@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:tripster_draft2/controllers/airportcontroller.dart';
 import 'package:tripster_draft2/resultsPages/SelectedFlight.dart';
-
+import 'package:lottie/lottie.dart';
 import '../controllers/searchcontroller.dart';
 
 class SearchResults extends StatefulWidget {
@@ -26,45 +26,74 @@ class _SearchResultsState extends State<SearchResults> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
-      appBar: travellingDetails(airportController),
-      bottomNavigationBar: bottomNav(context),
-      body: GetBuilder<OnewayController>(
-        builder: (onewayController) {
-          return (onewayController.length == 0)
-              ? Container(
-                  height: double.maxFinite,
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(),
-                  width: double.maxFinite,
-                  child: const CircularProgressIndicator(
-                    backgroundColor: Colors.white,
-                    color: Colors.yellow,
-                  ),
-                )
-              : SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 150),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        searchResultcount(onewayController),
-                        ListView.builder(
-                          itemCount: onewayController.length,
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return flightCard(onewayController, index);
-                          },
+        extendBody: true,
+        appBar: travellingDetails(airportController),
+        bottomNavigationBar: bottomNav(context),
+        body: (onewayController.isError == 0)
+            ? GetBuilder<OnewayController>(
+                builder: (onewayController) {
+                  return (onewayController.length == 0)
+                      ? SingleChildScrollView(
+                          child: Container(
+                              height: double.maxFinite,
+                              alignment: Alignment.center,
+                              decoration: const BoxDecoration(),
+                              width: double.maxFinite,
+                              child: Column(
+                                children: [
+                                  Container(
+                                      height: 250,
+                                      width: double.maxFinite,
+                                      decoration: BoxDecoration(),
+                                      child: Lottie.asset(
+                                          'assets/images/flightloading.json')),
+                                  SizedBox(
+                                    height: 50,
+                                  ),
+                                  CircularProgressIndicator(
+                                    backgroundColor: Colors.transparent,
+                                    color: Color.fromARGB(255, 255, 214, 1),
+                                  ),
+                                  SizedBox(
+                                    height: 40,
+                                  ),
+                                  Text(
+                                    'Loading Your Ride Details...',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ],
+                              )),
                         )
-                      ],
-                    ),
-                  ),
-                );
-        },
-      ),
-    );
+                      : SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 150),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                searchResultcount(onewayController),
+                                ListView.builder(
+                                  itemCount: onewayController.length,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    return flightCard(onewayController, index);
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                },
+              )
+            : SingleChildScrollView(
+                child: Container(
+                  child: Text('Error Found'),
+                ),
+              ));
   }
 
   GetBuilder<OnewayController> bottomNav(BuildContext context) {

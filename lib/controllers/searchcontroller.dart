@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:tripster_draft2/controllers/airportcontroller.dart';
 
 class OnewayController extends GetxController {
+  int isError = 0;
+  int notFound = 0;
   AirportController airportController = Get.find();
   late Map<String, dynamic> jsonData;
   late Map<String, dynamic> cancelData;
@@ -468,10 +470,17 @@ class OnewayController extends GetxController {
       if (response.statusCode == 200) {
         searchResults.value = jsonDecode(response.body);
         jsonData = jsonDecode(response.body);
-        length = jsonData['searchResult']['tripInfos']['ONWARD'].length;
-        PopulateLists();
-        isLoading = false;
-        update();
+
+        if (jsonData['status']['success'] == false) {
+          isError = 1;
+          log(isError.toString());
+          update();
+        } else {
+          length = jsonData['searchResult']['tripInfos']['ONWARD'].length;
+          PopulateLists();
+          isLoading = false;
+          update();
+        }
       } else {
         Get.snackbar('Error', 'Failed to fetch flight data',
             backgroundColor: Colors.redAccent, isDismissible: true);
